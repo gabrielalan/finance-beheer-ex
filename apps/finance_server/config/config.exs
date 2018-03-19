@@ -8,9 +8,6 @@ use Mix.Config
 # if you want to provide default values for your application for
 # 3rd-party users, it should be done in your "mix.exs" file.
 
-config :finance_server,
-    cowboy_port: 8080
-
 # You can configure your application as:
 #
 #     config :finance_server, key: :value
@@ -30,4 +27,5 @@ config :finance_server,
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-#     import_config "#{Mix.env}.exs"
+
+import_config "#{Mix.env}.exs"
