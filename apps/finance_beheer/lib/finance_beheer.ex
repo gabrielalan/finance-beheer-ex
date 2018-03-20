@@ -1,18 +1,11 @@
 defmodule FinanceBeheer do
-  @moduledoc """
-  Documentation for FinanceBeheer.
-  """
 
-  @doc """
-  Hello world.
+  def insert do
+    Mongo.insert_many(:mongo, "lol", [%{first_name: "John", last_name: "Smith"}, %{first_name: "Jane", last_name: "Doe"}])
+  end
 
-  ## Examples
-
-      iex> FinanceBeheer.hello
-      :world
-
-  """
-  def hello do
-    :world
+  def find do
+    Mongo.find(:mongo, "lol", %{})#, %{"$and" => [%{email: "my@email.com"}, %{first_name: "first_name"}]})
+    |> Enum.map(&(&1["first_name"]))
   end
 end
