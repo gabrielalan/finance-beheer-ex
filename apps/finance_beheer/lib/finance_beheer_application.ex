@@ -5,7 +5,6 @@ defmodule FinanceBeheer.Application do
 		database = Application.get_env(:finance_beheer, :database)
 
     children = [
-			# FinanceBeheer.Repo
 			{Mongo, [name: :mongo, database: database]}
     ]
 
