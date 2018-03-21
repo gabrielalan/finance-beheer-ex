@@ -5,7 +5,7 @@ defmodule FinanceBeheer do
   # %Mongo.InsertManyResult{
   #   inserted_ids: %{0 => #BSON.ObjectId<5ab2220d9737066fad32668a>}
   # }}
-  def insert_transactions(transactions) when is_list(transactions) do
+  def insert_transactions(transactions) when is_list(transactions) and length(transactions) > 0 do
       with {:ok, result} <- Mongo.insert_many(:mongo, "transactions", transactions),
         inserted_ids <- Map.get(result, :inserted_ids, %{}),
         result <- Enum.map(inserted_ids, fn {_, id} -> ObjectId.encode!(id) end),
@@ -13,7 +13,7 @@ defmodule FinanceBeheer do
   end
 
   def insert_transactions(_any) do
-    {:error, :invalid_data}
+    {:error, "Invalid data"}
   end
 
   def insert do

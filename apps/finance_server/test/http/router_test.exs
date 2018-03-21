@@ -4,29 +4,35 @@ defmodule FinanceServer.Http.RouterTest do
 
   alias FinanceServer.Http.Router
 
-  @opts Router.init([])
+	@opts Router.init([])
+	
+	setup_all do
+		Mongo.delete_many!(:mongo, "transactions", %{})
+		:ok
+	end
 
-  test "returns welcome" do
+  test "POST /transactions with INVALID payload" do
     conn =
-      conn(:get, "/", "")
+			conn(:post, "/transactions", "{}")
+			|> put_req_header("content-type", "application/json")
+      |> Router.call(@opts)
+
+    assert conn.state == :sent
+		assert conn.status == 422
+		assert conn.resp_body == "Invalid data"
+	end
+
+  test "POST /transactions with VALID payload" do
+    conn =
+			conn(:post, "/transactions", "[{\"value\":123},{\"value\":321}]")
+			|> put_req_header("content-type", "application/json")
       |> Router.call(@opts)
 
     assert conn.state == :sent
 		assert conn.status == 200
-		assert conn.resp_body == "Welcome"
+		assert Enum.any? conn.resp_headers, fn {_, value} -> value == "application/json" end
+		assert is_list(Poison.decode!(conn.resp_body)) == true
 	end
-	
-	test "POST /hello with valid payload" do
-    body = Poison.encode!(%{name: "Gaba"})
-
-    conn = conn(:post, "/hello", body)
-			|> put_req_header("content-type", "application/json")
-			|> Router.call(@opts)
-
-    assert conn.state == :sent
-    assert conn.status == 200
-    assert Poison.decode!(conn.resp_body) == %{"response" => "Hello, Gaba!"}
-  end
 
   test "returns 404" do
     conn =
