@@ -34,6 +34,17 @@ defmodule FinanceServer.Http.RouterTest do
 		assert is_list(Poison.decode!(conn.resp_body)) == true
 	end
 
+	test "GET /transactions" do
+    conn =
+			conn(:get, "/transactions", "")
+      |> Router.call(@opts)
+
+    assert conn.state == :sent
+		assert conn.status == 200
+		assert Enum.any? conn.resp_headers, fn {_, value} -> value == "application/json" end
+		assert is_list(Poison.decode!(conn.resp_body)) == true
+	end
+
   test "returns 404" do
     conn =
       conn(:get, "/missing", "")

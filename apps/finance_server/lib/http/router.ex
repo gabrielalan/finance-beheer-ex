@@ -28,6 +28,13 @@ defmodule FinanceServer.Http.Router do
 		end
 	end
 
+	get "/transactions" do
+		Logger.info "Retrieving all transactions"
+
+		list = FinanceBeheer.get_all_transactions()
+		send_resp(conn, 200, Poison.encode!(list))
+	end
+
 	match _ do 
 		send_resp(conn, 404, "Oops!")
 	end
