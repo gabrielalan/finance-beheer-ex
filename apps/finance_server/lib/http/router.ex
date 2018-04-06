@@ -35,6 +35,11 @@ defmodule FinanceServer.Http.Router do
 		send_resp(conn, 200, Poison.encode!(list))
 	end
 
+	get "/monthly-overview" do
+		Logger.info "Retrieving monthly overview"
+		send_resp(conn, 200, Poison.encode!(FinanceBeheer.get_monthly_overview()))
+	end
+
 	match _ do 
 		send_resp(conn, 404, "Oops!")
 	end
